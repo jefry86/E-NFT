@@ -43,9 +43,29 @@ func (m *NftMallGoods) List(status []int, sortColumn string, sort string, offset
 	}
 	return &list, nil
 }
+
+func (m *NftMallGoods) ListByUserId(userId string, status int, offset, size int) (*[]NftMallGoods, error) {
+	var list []NftMallGoods
+	err := m.Table().
+		Where("user_id=?", userId).
+		Where("status = ?", status).
+		Offset(offset).Limit(size).
+		Order("dt_create DESC").Find(&list).Error
+	if err != nil {
+		return nil, err
+	}
+	return &list, nil
+}
+
 func (m *NftMallGoods) Count(status []int) (int64, error) {
 	var count int64
 	err := m.Table().Where("status in ?", status).Count(&count).Error
+	return count, err
+}
+
+func (m *NftMallGoods) CountByUserAndStatus(userId string, status int) (int64, error) {
+	var count int64
+	err := m.Table().Where("user_id=?", userId).Where("status in ?", status).Count(&count).Error
 	return count, err
 }
 

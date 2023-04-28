@@ -35,5 +35,12 @@ func RandString(n int) string {
 }
 
 func PageOffset(pageNo, pageSize int) (int, int) {
+	if pageNo == 0 && pageSize == 0 {
+		return 0, 10
+	} else if pageNo == 0 {
+		return 0, pageSize
+	} else if pageSize == 0 {
+		pageSize = 10
+	}
 	return (pageNo - 1) * pageSize, pageSize
 }

@@ -5,3 +5,8 @@ type MallGoods struct {
 	Type int    `json:"type" binding:"require,number"`
 	Page
 }
+
+type MallGoodsList struct {
+	Status int `json:"status" binding:"require,number"`
+	Page
+}

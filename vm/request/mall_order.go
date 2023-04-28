@@ -6,6 +6,6 @@ type MallOrderApply struct {
 }
 
 type MallOrderList struct {
-	T int `json:"type" binding:"require,number"`
+	Status int `json:"status" binding:"require,number"`
 	Page
 }

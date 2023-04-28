@@ -77,7 +77,7 @@ func (m *MallOrder) ListForBuy(c *gin.Context) {
 		return
 	}
 
-	list, err := mallOrderService.ListForBuy(m.UserId, params.T, params.PageNo, params.PageSize)
+	list, err := mallOrderService.ListForBuy(m.UserId, params.Status, params.PageNo, params.PageSize)
 	if err != nil {
 		m.JsonErrorWithMsg(c, err.Error())
 	} else {
@@ -101,7 +101,7 @@ func (m *MallOrder) ListForSale(c *gin.Context) {
 		return
 	}
 
-	list, err := mallOrderService.ListForSale(m.UserId, params.T, params.PageNo, params.PageSize)
+	list, err := mallOrderService.ListForSale(m.UserId, params.Status, params.PageNo, params.PageSize)
 	if err != nil {
 		m.JsonErrorWithMsg(c, err.Error())
 	} else {
