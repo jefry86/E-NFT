@@ -3,9 +3,13 @@ package service
 import (
 	"fmt"
 	"nft_platform/global"
+	"nft_platform/model"
 	"nft_platform/utils"
 	"nft_platform/vm/response"
 )
+
+var mallPlatformAccount model.NftMallPlatformAccount
+var plaformService Platform
 
 type MallPlatform struct {
 }
@@ -45,4 +49,27 @@ func (m *MallPlatform) List(pageNo, pageSize int) (*response.MallPlatformListRes
 			Size:  pageSize,
 		},
 	}, nil
+}
+
+func (m *MallPlatform) ApiGoodsList(userId string, platformId, pageNo, pageSize int) (*response.PlatformGoodsListRes, error) {
+	userInfo, err := usersModel.FindByUserId(userId)
+	if err != nil {
+		global.SLogger.Errorf("find user id,err:%s", err)
+		return nil, fmt.Errorf("系统错误！")
+	}
+	platformAccount, err := mallPlatformAccount.FindByUserId(userId)
+	if err != nil {
+		global.SLogger.Errorf("mallPlatformAccount find user id,err:%s", err)
+		return nil, fmt.Errorf("系统错误！")
+	}
+	var platformWalletHash string
+	if platformAccount != nil {
+		platformWalletHash = platformAccount.PlatformWalletHash
+	}
+	goodsList, err := plaformService.GoodsList(platformWalletHash, userInfo.RealName, userInfo.CardNo, platformId, pageNo, pageSize)
+	if err != nil {
+		global.SLogger.Errorf("plaformService.GoodsList err:%s", err)
+		return nil, fmt.Errorf("系统错误！")
+	}
+	return goodsList, nil
 }

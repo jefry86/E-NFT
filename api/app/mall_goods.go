@@ -8,6 +8,7 @@ import (
 )
 
 var mallGoodsService service.MallGoods
+var platformService service.Platform
 
 type MallGoods struct {
 	UserBase
@@ -30,6 +31,23 @@ func (m *MallGoods) List(c *gin.Context) {
 
 // AddByApi 发售藏品
 func (m *MallGoods) AddByApi(c *gin.Context) {
+	var params request.AddByApi
+	if err := c.Bind(&params); err != nil {
+		global.SLogger.Errorf("param error:%s", err)
+		m.JsonParamsError(c)
+		return
+	}
+
+	if m.getUserId(c) != nil {
+		return
+	}
+
+	list, err := mallPlatformServer.ApiGoodsList(m.UserId, params.PlatformId, params.PageNo, params.PageSize)
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+	} else {
+		m.JsonSuccessWithData(c, list)
+	}
 
 }
 

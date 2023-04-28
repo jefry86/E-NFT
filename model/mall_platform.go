@@ -29,6 +29,12 @@ func (m *NftMallPlatform) Table() *gorm.DB {
 	return global.DB.Table(m.TableName())
 }
 
+func (m *NftMallPlatform) FindById(id int) (*NftMallPlatform, error) {
+	var info NftMallPlatform
+	err := m.Table().Where("id=?", id).First(&info).Error
+	return &info, err
+}
+
 func (m *NftMallPlatform) FindByAppKey(appKey string) (*NftMallPlatform, error) {
 	var info NftMallPlatform
 	err := m.Table().Where("app_key=?", appKey).First(&info).Error

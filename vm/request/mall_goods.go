@@ -10,3 +10,8 @@ type MallGoodsList struct {
 	Status int `json:"status" binding:"require,number"`
 	Page
 }
+
+type AddByApi struct {
+	PlatformId int `json:"platform_id" binding:"require,number"`
+	Page
+}

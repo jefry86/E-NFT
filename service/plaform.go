@@ -25,8 +25,8 @@ type Platform struct {
 }
 
 // Register 用户登记
-func (p *Platform) Register(appKey, nickName, mobile, name, cardNo string) (*response.PlatformUser, error) {
-	info, err := p.getPlatformInfo(appKey)
+func (p *Platform) Register(platformId int, nickName, mobile, name, cardNo string) (*response.PlatformUser, error) {
+	info, err := p.getPlatformInfo(platformId)
 	if err != nil {
 		global.SLogger.Errorf("get Platform Info err:%s", err)
 		return nil, err
@@ -62,8 +62,8 @@ func (p *Platform) Register(appKey, nickName, mobile, name, cardNo string) (*res
 }
 
 // Transfer 售卖通知
-func (p *Platform) Transfer(appKey, transferId, goodsHash, fromWalletHash, toWalletHash, name, cardNo string) (*response.PlatformTransfer, error) {
-	info, err := p.getPlatformInfo(appKey)
+func (p *Platform) Transfer(platformId int, transferId, goodsHash, fromWalletHash, toWalletHash, name, cardNo string) (*response.PlatformTransfer, error) {
+	info, err := p.getPlatformInfo(platformId)
 	if err != nil {
 		global.SLogger.Errorf("get Platform Info err:%s", err)
 		return nil, err
@@ -99,8 +99,8 @@ func (p *Platform) Transfer(appKey, transferId, goodsHash, fromWalletHash, toWal
 }
 
 // Sales 上架查询
-func (p *Platform) Sales(appKey, userId, walletHash, goodsId, goodsHash, name, cardNo string) (*response.PlatformSales, error) {
-	info, err := p.getPlatformInfo(appKey)
+func (p *Platform) Sales(platformId int, userId, walletHash, goodsId, goodsHash, name, cardNo string) (*response.PlatformSales, error) {
+	info, err := p.getPlatformInfo(platformId)
 	if err != nil {
 		global.SLogger.Errorf("get Platform Info err:%s", err)
 		return nil, err
@@ -136,8 +136,8 @@ func (p *Platform) Sales(appKey, userId, walletHash, goodsId, goodsHash, name, c
 }
 
 // GoodsList 藏品列表
-func (p *Platform) GoodsList(appKey, walletHash, name, cardNo string, pageNo, pageSize int) (*response.PlatformGoodsListRes, error) {
-	info, err := p.getPlatformInfo(appKey)
+func (p *Platform) GoodsList(walletHash, name, cardNo string, platformId, pageNo, pageSize int) (*response.PlatformGoodsListRes, error) {
+	info, err := p.getPlatformInfo(platformId)
 	if err != nil {
 		global.SLogger.Errorf("get Platform Info err:%s", err)
 		return nil, err
@@ -171,8 +171,8 @@ func (p *Platform) GoodsList(appKey, walletHash, name, cardNo string, pageNo, pa
 	return &result, nil
 }
 
-func (p *Platform) getPlatformInfo(appKey string) (*model.NftMallPlatform, error) {
-	info, err := mallPlatformMode.FindByAppKey(appKey)
+func (p *Platform) getPlatformInfo(platformId int) (*model.NftMallPlatform, error) {
+	info, err := mallPlatformMode.FindById(platformId)
 	if err != nil {
 		global.SLogger.Errorf("find app key err:%s", err.Error())
 		return nil, err
