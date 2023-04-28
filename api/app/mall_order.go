@@ -66,10 +66,45 @@ func (m *MallOrder) ListForBuy(c *gin.Context) {
 	if m.getUserId(c) != nil {
 		return
 	}
+	var params request.MallOrderList
+	if err := c.ShouldBind(&params); err != nil {
+		global.SLogger.Warnf("请求参数有误,err:%s", err)
+		m.JsonParamsError(c)
+		return
+	}
 
+	if err := m.getUserId(c); err != nil {
+		return
+	}
+
+	list, err := mallOrderService.ListForBuy(m.UserId, params.T, params.PageNo, params.PageSize)
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+	} else {
+		m.JsonSuccessWithData(c, list)
+	}
 }
 
 // ListForSale 出售订单列表
 func (m *MallOrder) ListForSale(c *gin.Context) {
+	if m.getUserId(c) != nil {
+		return
+	}
+	var params request.MallOrderList
+	if err := c.ShouldBind(&params); err != nil {
+		global.SLogger.Warnf("请求参数有误,err:%s", err)
+		m.JsonParamsError(c)
+		return
+	}
 
+	if err := m.getUserId(c); err != nil {
+		return
+	}
+
+	list, err := mallOrderService.ListForSale(m.UserId, params.T, params.PageNo, params.PageSize)
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+	} else {
+		m.JsonSuccessWithData(c, list)
+	}
 }
