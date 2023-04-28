@@ -78,3 +78,7 @@ func (m *NftMallGoods) FindById(id uint) (*NftMallGoods, error) {
 	}
 	return &info, nil
 }
+
+func (m *NftMallGoods) Add(data NftMallGoods) error {
+	return m.Table().Create(&data).Error
+}

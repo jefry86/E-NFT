@@ -5,6 +5,7 @@ import (
 	"nft_platform/global"
 	"nft_platform/model"
 	"nft_platform/utils"
+	"nft_platform/vm/request"
 	"nft_platform/vm/response"
 	"time"
 )
@@ -104,4 +105,27 @@ func (m *MallGoods) ListByUserId(userId string, status, pageNo, pageSize int) (*
 			Size:  pageSize,
 		},
 	}, nil
+}
+
+func (m *MallGoods) Add(goods request.MallGoodsAdd, userId string) (bool, error) {
+	data := model.NftMallGoods{
+		Name:          goods.Name,
+		Image:         goods.Image,
+		Detail:        goods.Detail,
+		Price:         goods.Price,
+		OriginalPrice: goods.OriginalPrice,
+		PlatformID:    goods.PlatformID,
+		No:            goods.No,
+		Source:        goods.Source,
+		SourceType:    goods.SourceType,
+		Hash:          goods.Hash,
+		UserId:        userId,
+	}
+
+	err := mallGoodsModel.Add(data)
+	if err != nil {
+		global.SLogger.Errorf("create db err:%s", err)
+		return false, err
+	}
+	return true, nil
 }

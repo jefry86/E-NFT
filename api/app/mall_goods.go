@@ -29,9 +29,9 @@ func (m *MallGoods) List(c *gin.Context) {
 	m.JsonSuccessWithData(c, *list)
 }
 
-// AddByApi 发售藏品
-func (m *MallGoods) AddByApi(c *gin.Context) {
-	var params request.AddByApi
+// PlatformGoodsList 发售藏品
+func (m *MallGoods) PlatformGoodsList(c *gin.Context) {
+	var params request.PlatformGoodsList
 	if err := c.Bind(&params); err != nil {
 		global.SLogger.Errorf("param error:%s", err)
 		m.JsonParamsError(c)
@@ -49,6 +49,26 @@ func (m *MallGoods) AddByApi(c *gin.Context) {
 		m.JsonSuccessWithData(c, list)
 	}
 
+}
+
+func (m *MallGoods) Add(c *gin.Context) {
+	var params request.MallGoodsAdd
+	if err := c.Bind(&params); err != nil {
+		global.SLogger.Errorf("param error:%s", err)
+		m.JsonParamsError(c)
+		return
+	}
+
+	if m.getUserId(c) != nil {
+		return
+	}
+
+	_, err := mallGoodsService.Add(params, m.UserId)
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+	} else {
+		m.JsonSuccess(c)
+	}
 }
 
 // MyGoodsList 我的出售藏品
