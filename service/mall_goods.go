@@ -120,6 +120,8 @@ func (m *MallGoods) Add(goods request.MallGoodsAdd, userId string) (bool, error)
 		SourceType:    goods.SourceType,
 		Hash:          goods.Hash,
 		UserId:        userId,
+		Status:        1,
+		Type:          1,
 	}
 
 	err := mallGoodsModel.Add(data)

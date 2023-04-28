@@ -30,6 +30,15 @@ func (m *NftUserBank) ListByUserId(userId string) (*[]NftUserBank, error) {
 	return &list, nil
 }
 
+func (m *NftUserBank) FindById(id int) (*NftUserBank, error) {
+	var info NftUserBank
+	err := m.Table().Where("id=?", id).Where("status=1").Order("dt_create DESC").First(&info).Error
+	if err != nil {
+		return nil, err
+	}
+	return &info, nil
+}
+
 func (m *NftUserBank) Add(data NftUserBank) error {
 	return m.Table().Create(&data).Error
 }
