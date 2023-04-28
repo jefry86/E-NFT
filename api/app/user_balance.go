@@ -1,14 +1,26 @@
 package app
 
+import (
+	"github.com/gin-gonic/gin"
+	"nft_platform/service"
+)
+
+var userBalanceService service.UserBalance
+
 type UserBalance struct {
+	UserBase
 }
 
-// List 我的提现记录
-func (b *UserBalance) List() {
+// List 余额流水
+func (b *UserBalance) List(c *gin.Context) {
+	if b.getUserId(c) != nil {
+		return
+	}
 
-}
-
-// Add 我也提现
-func (b *UserBalance) Add() {
-
+	list, err := userBankService.List(b.UserId)
+	if err != nil {
+		b.JsonErrorWithMsg(c, err.Error())
+	} else {
+		b.JsonSuccessWithData(c, list)
+	}
 }

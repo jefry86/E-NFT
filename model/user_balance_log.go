@@ -29,3 +29,15 @@ func (m *NftUserBalanceLog) Table() *gorm.DB {
 func (m *NftUserBalanceLog) Add(log NftUserBalanceLog) error {
 	return m.Table().Create(&log).Error
 }
+
+func (m *NftUserBalanceLog) ListByUserId(userId string, offset, size int) (*[]NftUserBalanceLog, error) {
+	var list []NftUserBalanceLog
+	err := m.Table().Where("user_id=?", userId).Offset(offset).Limit(size).Order("dt_create DESC").Find(&list).Error
+	return &list, err
+}
+
+func (m *NftUserBalanceLog) CountByUserId(userId string) (int64, error) {
+	var count int64
+	err := m.Table().Where("user_id=?", userId).Count(&count).Error
+	return count, err
+}
