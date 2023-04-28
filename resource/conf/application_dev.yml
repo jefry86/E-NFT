@@ -1,0 +1,44 @@
+server:
+  name: nft_platform
+  port: 8081
+  mode: debug
+  appkey: klBScNxp
+  appsecret: jXmchp1qow0lFvU5
+  smsmobilelimit: 10
+  smsiplimit: 10
+  defaultavatar: http://img.520touxiang.com/uploads/allimg/180107/3-1P10G31925.jpg
+  payexpirationtime: 5
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: root
+  database: nft_platform
+  max-idle: 20
+  max-open-idle: 5
+  max-life-time: 3600
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password:
+  timeout: 30
+  max-idle: 20
+  min-idle: 5
+  pool-size: 10
+logger:
+  type: console
+  level: debug
+  path: ./resource/logs
+tcloud:
+  sms:
+    secretid: AKIDagZBYgZDcppa6NQHvOdfU4OZdT6VhjV2
+    secretkey: RdcOvpa8QXbUCi16ze7VfZCc0KTO4Ufc
+    appid: 1400802511
+    signname: YoungMeta
+    tempid:
+      code: 1729917
+      buy: 1730351
+      login: 1730156
+  realname:
+    secretid: AKID3o2amsxX1ConD00yHEkWKzr8pwxkkC2zRb6I
+    secretkey: 2lfDk9P4vX6r14Cc3pSq9W2t0PcZSljl8nyHkv5O
