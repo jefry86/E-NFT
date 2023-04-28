@@ -20,7 +20,7 @@ func (m *MallGoods) List(c *gin.Context) {
 		m.JsonParamsError(c)
 		return
 	}
-	list, err := mallGoodsService.List(params.Sort, params.Type, params.PageNo, params.PageSize)
+	list, err := mallGoodsService.List(params.Sort, params.PageNo, params.PageSize)
 	if err != nil {
 		m.JsonErrorWithMsg(c, err.Error())
 		return
@@ -28,8 +28,8 @@ func (m *MallGoods) List(c *gin.Context) {
 	m.JsonSuccessWithData(c, *list)
 }
 
-// Add 发售藏品
-func (m *MallGoods) Add(c *gin.Context) {
+// AddByApi 发售藏品
+func (m *MallGoods) AddByApi(c *gin.Context) {
 
 }
 
@@ -44,5 +44,10 @@ func (m *MallGoods) MyGoodsList(c *gin.Context) {
 		m.JsonParamsError(c)
 		return
 	}
-
+	list, err := mallGoodsService.ListByUserId(m.UserId, params.Status, params.PageNo, params.PageSize)
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+		return
+	}
+	m.JsonSuccessWithData(c, list)
 }

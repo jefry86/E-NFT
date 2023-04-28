@@ -34,6 +34,10 @@ func (a *Api) JsonWithCodeAndData(c *gin.Context, code global.Code, data interfa
 
 func (a *Api) JsonSuccessWithData(c *gin.Context, data interface{}) {
 	ok := global.OK
+	if data == nil {
+		data = map[string]string{}
+	}
+
 	result := ResponseData{
 		Code: int(ok),
 		Msg:  ok.String(),
