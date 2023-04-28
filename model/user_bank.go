@@ -21,20 +21,20 @@ func (m *NftUserBank) Table() *gorm.DB {
 	return m.Base.Table(m.TableName())
 }
 
-func (m *NftUserBank) listByUserId(userId string) (*[]NftUserBank, error) {
+func (m *NftUserBank) ListByUserId(userId string) (*[]NftUserBank, error) {
 	var list []NftUserBank
-	err := m.Table().Where("user_id=?", userId).Find(&list).Error
+	err := m.Table().Where("user_id=?", userId).Where("status=1").Order("dt_create DESC").Find(&list).Error
 	if err != nil {
 		return nil, err
 	}
 	return &list, nil
 }
 
-func (m *NftUserBank) Add(data NftUsers) error {
+func (m *NftUserBank) Add(data NftUserBank) error {
 	return m.Table().Create(&data).Error
 }
 
-func (m *NftUserBank) Delete(id int) error {
+func (m *NftUserBank) Delete(id int, userId string) error {
 	var model NftUserBank
-	return m.Table().Where("id=?", id).Delete(&model).Error
+	return m.Table().Where("id=?", id).Where("user_id=?", userId).Delete(&model).Error
 }

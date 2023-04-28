@@ -14,7 +14,7 @@ type MallUserGoods struct {
 	UserBase
 }
 
-func (u *MallUserGoods) Goods(c *gin.Context) {
+func (u *MallUserGoods) GoodsList(c *gin.Context) {
 
 	var params request.MallUserGoods
 	if err := c.ShouldBind(&params); err != nil {
@@ -27,7 +27,7 @@ func (u *MallUserGoods) Goods(c *gin.Context) {
 		return
 	}
 
-	list, err := mallUserGoodsService.Goods(u.UserId, params.Type, params.PageNo, params.PageSize)
+	list, err := mallUserGoodsService.GoodsList(u.UserId, params.Type, params.PageNo, params.PageSize)
 	if err != nil {
 		u.JsonErrorWithMsg(c, err.Error())
 	} else {
