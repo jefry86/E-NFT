@@ -13,7 +13,7 @@ var mallUserGoodsModel model.NftMallUserGoods
 type MallUserGoods struct {
 }
 
-func (u *MallUserGoods) Goods(userId string, t, pageNo, pageSize int) (*response.MallUserGoodsRes, error) {
+func (u *MallUserGoods) Goods(userId string, t, pageNo, pageSize int) (*response.MallUserGoodsListRes, error) {
 	count, err := mallUserGoodsModel.Count(userId, t)
 	if err != nil {
 		global.SLogger.Errorf("get mall user goods count for db err:%s", err)
@@ -47,7 +47,7 @@ func (u *MallUserGoods) Goods(userId string, t, pageNo, pageSize int) (*response
 			DateTime:     time.Unix(int64(goods.DtCreate), 0).Format(time.DateOnly),
 		})
 	}
-	return &response.MallUserGoodsRes{
+	return &response.MallUserGoodsListRes{
 		List: res,
 		Page: response.Page{
 			Total: count,

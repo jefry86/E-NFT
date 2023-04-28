@@ -13,7 +13,7 @@ type MallGoodsList struct {
 	DateTime     string `json:"date_time"`
 }
 
-type MallGoodsRes struct {
+type MallGoodsListRes struct {
 	List []MallGoodsList `json:"list"`
 	Page
 }

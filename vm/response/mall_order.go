@@ -35,3 +35,8 @@ type MallOrderList struct {
 	DateTime   time.Time `json:"date_time"`
 	Status     uint8     `json:"status"`
 }
+
+type MallOrderListRes struct {
+	List []MallOrderList `json:"list"`
+	Page
+}

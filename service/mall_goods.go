@@ -14,7 +14,7 @@ var mallGoodsModel model.NftMallGoods
 type MallGoods struct {
 }
 
-func (m *MallGoods) List(sort string, pageNo, pageSize int) (*response.MallGoodsRes, error) {
+func (m *MallGoods) List(sort string, pageNo, pageSize int) (*response.MallGoodsListRes, error) {
 	offset, pageSize := utils.PageOffset(pageNo, pageSize)
 	status := []int{
 		1, 2,
@@ -57,7 +57,7 @@ func (m *MallGoods) List(sort string, pageNo, pageSize int) (*response.MallGoods
 			DateTime:     time.Unix(int64(goods.DtCreate), 0).Format(time.DateOnly),
 		})
 	}
-	return &response.MallGoodsRes{
+	return &response.MallGoodsListRes{
 		List: res,
 		Page: response.Page{
 			Total: count,
@@ -66,7 +66,7 @@ func (m *MallGoods) List(sort string, pageNo, pageSize int) (*response.MallGoods
 	}, nil
 }
 
-func (m *MallGoods) ListByUserId(userId string, status, pageNo, pageSize int) (*response.MallGoodsRes, error) {
+func (m *MallGoods) ListByUserId(userId string, status, pageNo, pageSize int) (*response.MallGoodsListRes, error) {
 	offset, pageSize := utils.PageOffset(pageNo, pageSize)
 	count, err := mallGoodsModel.CountByUserAndStatus(userId, status)
 	if err != nil {
@@ -97,7 +97,7 @@ func (m *MallGoods) ListByUserId(userId string, status, pageNo, pageSize int) (*
 			DateTime:     time.Unix(int64(goods.DtCreate), 0).Format(time.DateOnly),
 		})
 	}
-	return &response.MallGoodsRes{
+	return &response.MallGoodsListRes{
 		List: res,
 		Page: response.Page{
 			Total: count,

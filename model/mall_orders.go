@@ -85,3 +85,13 @@ func (m *NftMallOrders) ListByUserIdAndStatus(column, userId string, status, off
 	err := db.Order("dt_create DESC").Offset(offset).Limit(size).Find(&list).Error
 	return &list, err
 }
+
+func (m *NftMallOrders) CountByUserIdAndStatus(column, userId string, status int) (int64, error) {
+	var count int64
+	db := m.Table().Where(fmt.Sprintf("%s=?", column), userId)
+	if status > 0 {
+		db.Where("status=?", status)
+	}
+	err := db.Order("dt_create DESC").Count(&count).Error
+	return count, err
+}

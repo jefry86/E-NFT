@@ -146,8 +146,18 @@ func (m *MallOrder) Deliver(orderId string) (bool, error) {
 	return true, nil
 }
 
-func (m *MallOrder) ListForBuy(userId string, status, pageNo, pageSize int) (*[]response.MallOrderList, error) {
+func (m *MallOrder) ListForBuy(userId string, status, pageNo, pageSize int) (*response.MallOrderListRes, error) {
 	offset, pageSize := utils.PageOffset(pageNo, pageSize)
+	count, err := mallOrderModel.CountByUserIdAndStatus("user_id", userId, status)
+	if err != nil {
+		global.SLogger.Errorf("get list by db err:%s", err)
+		return nil, fmt.Errorf("系统错误！")
+	}
+
+	if count == 0 {
+		return nil, nil
+	}
+
 	list, err := mallOrderModel.ListByUserIdAndStatus("user_id", userId, status, offset, pageSize)
 	if err != nil {
 		global.SLogger.Errorf("get list by db err:%s", err)
@@ -172,11 +182,28 @@ func (m *MallOrder) ListForBuy(userId string, status, pageNo, pageSize int) (*[]
 		})
 	}
 
-	return &res, nil
+	return &response.MallOrderListRes{
+		List: res,
+		Page: response.Page{
+			Total: count,
+			Size:  pageSize,
+		},
+	}, nil
 }
 
-func (m *MallOrder) ListForSale(userId string, status, pageNo, pageSize int) (*[]response.MallOrderList, error) {
+func (m *MallOrder) ListForSale(userId string, status, pageNo, pageSize int) (*response.MallOrderListRes, error) {
 	offset, pageSize := utils.PageOffset(pageNo, pageSize)
+
+	count, err := mallOrderModel.CountByUserIdAndStatus("from_user_id", userId, status)
+	if err != nil {
+		global.SLogger.Errorf("get list by db err:%s", err)
+		return nil, fmt.Errorf("系统错误！")
+	}
+
+	if count == 0 {
+		return nil, nil
+	}
+
 	list, err := mallOrderModel.ListByUserIdAndStatus("from_user_id", userId, status, offset, pageSize)
 	if err != nil {
 		global.SLogger.Errorf("get list by db err:%s", err)
@@ -199,7 +226,13 @@ func (m *MallOrder) ListForSale(userId string, status, pageNo, pageSize int) (*[
 			Status:     order.Status,
 		})
 	}
-	return &res, nil
+	return &response.MallOrderListRes{
+		List: res,
+		Page: response.Page{
+			Total: count,
+			Size:  pageSize,
+		},
+	}, nil
 }
 
 func (m *MallOrder) generateOrderId() string {
