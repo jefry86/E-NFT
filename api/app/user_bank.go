@@ -49,8 +49,8 @@ func (u *UserBank) Add(c *gin.Context) {
 
 }
 
-// Del 移除银行卡
-func (u *UserBank) Del(c *gin.Context) {
+// Delete 移除银行卡
+func (u *UserBank) Delete(c *gin.Context) {
 	if u.getUserId(c) != nil {
 		return
 	}

@@ -5,8 +5,8 @@ import (
 	"nft_platform/api/app"
 )
 
-func bannerRouter(e *gin.RouterGroup) {
+func bannerRouter(g *gin.RouterGroup) {
 	var BannerApi app.Banner
-	bannerGroup := e.Group("banner")
+	bannerGroup := g.Group("banner")
 	bannerGroup.GET("list", BannerApi.List)
 }

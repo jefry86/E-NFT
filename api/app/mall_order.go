@@ -13,8 +13,8 @@ type MallOrder struct {
 	UserBase
 }
 
-// 下单
-func (m *MallOrder) apply(c *gin.Context) {
+// Apply 下单
+func (m *MallOrder) Apply(c *gin.Context) {
 	var params request.MallOrderApply
 	if err := c.ShouldBind(&params); err != nil {
 		global.SLogger.Warnf("请求参数有误,err:%s", err)
