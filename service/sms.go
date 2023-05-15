@@ -33,8 +33,8 @@ func (s *Sms) SendCode(userId, mobile, ip string, t int) error {
 	}
 
 	var err error
-	code := s.getCode(6)
-
+	//code := s.getCode(6)
+	code := "123456"
 	switch t {
 	case 1:
 		err = s.loginCode(mobile, code)
@@ -60,6 +60,11 @@ func (s *Sms) ChkCode(mobile, code string, t int) (bool, error) {
 	if redisCode != code {
 		return false, nil
 	}
+	err = utils.RedisUnlink(redisKey)
+	if err != nil {
+		return false, fmt.Errorf("系统错误！")
+	}
+
 	return true, nil
 }
 

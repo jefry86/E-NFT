@@ -39,6 +39,7 @@ func Run() {
 // 初始化server
 func newServer() *gin.Engine {
 	r := gin.New()
+	gin.Default()
 	bindValidator()
 	setServerMode()
 	setServerLogger()
@@ -58,6 +59,7 @@ func stopServer(srv *http.Server) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	global.Rdb.Close()
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Fatal("Server Shutdown:", err)
 	}
@@ -77,9 +79,8 @@ func registerStatic(e *gin.Engine) {
 
 // 注册中间件
 func registerMiddleware(e *gin.Engine) {
-	e.Use(middleware.Recover())
+	e.Use(middleware.Cors(), middleware.Recover())
 	e.Use(middleware.Logger())
-	e.Use(middleware.Cors())
 	e.Use(middleware.CheckSign())
 	e.Use(middleware.JWT())
 }

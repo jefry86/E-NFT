@@ -10,7 +10,9 @@ type MallGoodsList struct {
 	PlatformId   uint   `json:"platform_id"`
 	PlatformName string `json:"platform_name"`
 	PlatformLogo string `json:"platform_logo"`
+	Price        uint   `json:"price"`
 	DateTime     string `json:"date_time"`
+	Status       uint8  `json:"status"`
 }
 
 type MallGoodsListRes struct {

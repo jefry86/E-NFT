@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"nft_platform/global"
 	"nft_platform/service"
+	"nft_platform/utils"
 	"nft_platform/vm/request"
 )
 
@@ -16,20 +17,50 @@ type MallGoods struct {
 
 func (m *MallGoods) List(c *gin.Context) {
 	var params request.MallGoods
-	if err := c.Bind(&params); err != nil {
+	if err := c.ShouldBind(&params); err != nil {
 		global.SLogger.Errorf("param error:%s", err)
 		m.JsonParamsError(c)
 		return
 	}
-	list, err := mallGoodsService.List(params.Sort, params.PageNo, params.PageSize)
+	list, err := mallGoodsService.List("", params.PlatformId, params.Sort, params.Type, params.PageNo, params.PageSize)
 	if err != nil {
 		m.JsonErrorWithMsg(c, err.Error())
 		return
 	}
-	m.JsonSuccessWithData(c, *list)
+	m.JsonSuccessWithData(c, list)
 }
 
-// PlatformGoodsList 发售藏品
+func (m *MallGoods) Search(c *gin.Context) {
+	var params request.MallGoodsSearch
+	if err := c.ShouldBind(&params); err != nil {
+		global.SLogger.Errorf("param error:%s", err)
+		m.JsonParamsError(c)
+		return
+	}
+	list, err := mallGoodsService.List(params.Keyword, params.PlatformId, params.Sort, params.Type, params.PageNo, params.PageSize)
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+		return
+	}
+	m.JsonSuccessWithData(c, list)
+}
+
+func (m *MallGoods) Info(c *gin.Context) {
+	id := utils.AtoInt(c.DefaultQuery("id", "0"))
+	if id <= 0 {
+		m.JsonParamsError(c)
+	}
+
+	info, err := mallGoodsService.Info(id, "")
+	if err != nil {
+		m.JsonErrorWithMsg(c, err.Error())
+	} else {
+		m.JsonSuccessWithData(c, info)
+	}
+
+}
+
+// PlatformGoodsList 藏品
 func (m *MallGoods) PlatformGoodsList(c *gin.Context) {
 	var params request.PlatformGoodsList
 	if err := c.Bind(&params); err != nil {
@@ -53,7 +84,7 @@ func (m *MallGoods) PlatformGoodsList(c *gin.Context) {
 
 func (m *MallGoods) Add(c *gin.Context) {
 	var params request.MallGoodsAdd
-	if err := c.Bind(&params); err != nil {
+	if err := c.ShouldBind(&params); err != nil {
 		global.SLogger.Errorf("param error:%s", err)
 		m.JsonParamsError(c)
 		return

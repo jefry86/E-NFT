@@ -14,4 +14,5 @@ func AppRouter(e *gin.Engine) {
 	userBank(routerGroup)
 	userWithdraw(routerGroup)
 	users(routerGroup)
+	public(routerGroup)
 }

@@ -20,7 +20,7 @@ func (b *Base) SetDtUpdate() {
 }
 
 func (b *Base) BeforeCreate(tx *gorm.DB) error {
-	b.SetDtUpdate()
+	b.SetDtCreate()
 	b.SetDtUpdate()
 	return nil
 }

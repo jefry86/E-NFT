@@ -12,6 +12,7 @@ import (
 func initZap() {
 	core := zapcore.NewCore(getEncoder(), getWriter(), getLevel())
 	global.Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.WarnLevel))
+	//global.Logger = zap.New(core, zap.AddCaller())
 	global.SLogger = global.Logger.Sugar()
 }
 

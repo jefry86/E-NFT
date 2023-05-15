@@ -20,10 +20,10 @@ func CheckSign() gin.HandlerFunc {
 
 		timestamp := c.GetHeader("timestamp")
 		sign := c.GetHeader("sign")
-		appKey := c.Query("app_key")
+		appKey := c.GetHeader("app-key")
 		var R api.Api
 		if timestamp == "" || sign == "" || appKey == "" {
-			global.SLogger.Warnf("timestamp:%s sign:%s app_key:%s 为空", timestamp, sign, appKey)
+			global.SLogger.Warnf("timestamp:%s sign:%s app-key:%s 为空", timestamp, sign, appKey)
 			R.JsonWithCode(c, global.ParamErr)
 			c.Abort()
 			return
@@ -34,6 +34,10 @@ func CheckSign() gin.HandlerFunc {
 			return
 		}
 
+		err := c.Request.ParseForm()
+		if err != nil {
+			panic(err)
+		}
 		queryParam := c.Request.URL.Query()
 		postParam := c.Request.PostForm
 		var params url.Values
@@ -41,8 +45,11 @@ func CheckSign() gin.HandlerFunc {
 			params = queryParam
 		} else if len(postParam) > 0 {
 			params = postParam
+		} else {
+			params = url.Values{}
 		}
 		params.Add("timestamp", timestamp)
+		params.Add("app-key", appKey)
 
 		data := make(map[string]interface{}, 0)
 		for key, val := range params {

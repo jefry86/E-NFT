@@ -14,10 +14,9 @@ type UserBase struct {
 func (u *UserBase) getUserId(c *gin.Context) error {
 	var userService service.Users
 	var err error
-	u.UserId, err = userService.GetUserByToken(c.GetHeader("token"))
+	u.UserId, err = userService.GetUserByToken(c.GetHeader("Authorization"))
 	if err != nil {
 		u.JsonErrorWithMsg(c, err.Error())
-		c.Abort()
 		return err
 	}
 	return nil

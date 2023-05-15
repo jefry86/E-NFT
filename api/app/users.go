@@ -18,7 +18,7 @@ type Users struct {
 // LoginByMobile 登录
 func (u *Users) LoginByMobile(c *gin.Context) {
 	var params request.LoginByMobile
-	if err := c.Bind(&params); err != nil {
+	if err := c.ShouldBind(&params); err != nil {
 		global.SLogger.Warnf("请求参数有误,err:%s", err)
 		u.JsonParamsError(c)
 		return
@@ -93,12 +93,17 @@ func (u *Users) ChangMobile(c *gin.Context) {
 
 // SendSMS 发送验证码
 func (u *Users) SendSMS(c *gin.Context) {
-	mobile := c.DefaultQuery("mobile", "")
-	t := c.DefaultQuery("type", "1")
-	if t == "2" && u.getUserId(c) != nil {
+	var params request.SendSMS
+	if err := c.ShouldBind(&params); err != nil {
+		global.SLogger.Errorf("param error:%s", err)
+		u.JsonParamsError(c)
 		return
 	}
-	if err := smsService.SendCode(u.UserId, mobile, c.ClientIP(), utils.AtoInt(t)); err != nil {
+
+	if params.T == "2" && u.getUserId(c) != nil {
+		return
+	}
+	if err := smsService.SendCode(u.UserId, params.Mobile, c.ClientIP(), utils.AtoInt(params.T)); err != nil {
 		u.JsonErrorWithMsg(c, err.Error())
 		return
 	}

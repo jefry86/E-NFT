@@ -8,6 +8,9 @@ import (
 )
 
 func AtoInt(str string) int {
+	if str == "" {
+		return 0
+	}
 	i, err := strconv.Atoi(str)
 	if err != nil {
 		panic(fmt.Errorf("string to int err:%s", err))
@@ -16,6 +19,9 @@ func AtoInt(str string) int {
 }
 
 func AtoInt64(str string) int64 {
+	if str == "" {
+		return 0
+	}
 	i, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
 		panic(fmt.Errorf("string to int64 err:%s", err))

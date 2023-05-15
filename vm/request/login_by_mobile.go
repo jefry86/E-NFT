@@ -1,6 +1,6 @@
 package request
 
 type LoginByMobile struct {
-	Mobile string `json:"mobile"  binding:"required,mobile"`
-	Code   string `json:"code"  binding:"required,len:6"`
+	Mobile string `form:"mobile" json:"mobile"  binding:"required,mobile"`
+	Code   string `form:"code" json:"code"  binding:"required,number,len=6"`
 }

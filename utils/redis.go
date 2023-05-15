@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-var ctx context.Context
+var ctx = context.Background()
 
 func RedisGetString(key string) (string, error) {
 	val, err := global.Rdb.Get(ctx, key).Result()
-	if err != nil {
-		global.SLogger.Error("redis get %s, err:%s", key, err)
+	if err != nil && err.Error() != "redis: nil" {
+		global.SLogger.Errorf("redis get %s, err:%s", key, err)
 		return "", err
 	}
 	return val, nil
@@ -19,7 +19,7 @@ func RedisGetString(key string) (string, error) {
 
 func RedisSetString(key, val string, expiration time.Duration) error {
 	if err := global.Rdb.Set(ctx, key, val, expiration).Err(); err != nil {
-		global.SLogger.Error("redis set %s,val:%s err:%s", key, val, err)
+		global.SLogger.Errorf("redis set %s,val:%s err:%s", key, val, err)
 		return err
 	}
 	return nil
@@ -27,7 +27,7 @@ func RedisSetString(key, val string, expiration time.Duration) error {
 
 func RedisInc(key string) error {
 	if err := global.Rdb.Incr(ctx, key).Err(); err != nil {
-		global.SLogger.Error("redis Incr %s err:%s", key, err)
+		global.SLogger.Errorf("redis Incr %s err:%s", key, err)
 		return err
 	}
 	return nil
@@ -36,7 +36,7 @@ func RedisInc(key string) error {
 func RedisExists(key string) (bool, error) {
 	n, err := global.Rdb.Exists(ctx, key).Result()
 	if err != nil {
-		global.SLogger.Error("redis Exists %s err:%s", key, err)
+		global.SLogger.Errorf("redis Exists %s err:%s", key, err)
 		return false, err
 	}
 	return n == 1, nil

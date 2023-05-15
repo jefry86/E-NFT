@@ -35,6 +35,7 @@ func (m *MallPlatform) List(pageNo, pageSize int) (*response.MallPlatformListRes
 	res := make([]response.MallPlatformList, 0)
 	for _, platform := range *list {
 		res = append(res, response.MallPlatformList{
+			Id:        platform.ID,
 			Name:      platform.Name,
 			Logo:      platform.Logo,
 			Site:      platform.Site,

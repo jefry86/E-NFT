@@ -5,10 +5,10 @@ type Code int
 const (
 	OK               Code = 200
 	Fail             Code = 500
-	ParamErr         Code = 401
+	PermissionDenied Code = 401
 	SignErr          Code = 402
-	PermissionDenied Code = 403
-	SystemErr        Code = 501
+	ParamErr         Code = 501
+	SystemErr        Code = 502
 )
 
 func (c Code) String() string {

@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	idvalidator "github.com/guanguans/id-validator"
+	"github.com/jaevor/go-nanoid"
 	"nft_platform/global"
 	"nft_platform/model"
 	"nft_platform/utils"
@@ -37,8 +37,8 @@ func (u *Users) LoginByMobile(mobile, code string) (*response.Login, error) {
 	var userId, nickname string
 	//用户不存在，注册
 	if userInfo == nil {
-		userId = utils.RandString(12)
-		nickname = fmt.Sprintf("nf-%s", mobile[8:])
+		userId = u.generateUserId()
+		nickname = fmt.Sprintf("nf-%s", mobile[7:])
 		userInfo := model.NftUsers{
 			UserID:   userId,
 			Username: mobile,
@@ -47,6 +47,7 @@ func (u *Users) LoginByMobile(mobile, code string) (*response.Login, error) {
 			Mobile:   mobile,
 			Avatar:   global.Conf.Server.DefaultAvatar,
 			Token:    token,
+			Status:   1,
 		}
 		if err := usersModel.Add(userInfo); err != nil {
 			global.SLogger.Error("add user err:%s", err)
@@ -57,9 +58,11 @@ func (u *Users) LoginByMobile(mobile, code string) (*response.Login, error) {
 			global.SLogger.Error("set token to redis err:%s", err)
 			return nil, fmt.Errorf("系统异常，请联系客服！")
 		}
-
 	} else {
 		//用户存在
+		if userInfo.Status != 1 {
+			return nil, fmt.Errorf("您的账号异常，请联系客服！")
+		}
 		data := model.NftUsers{Token: token}
 		if err := usersModel.UpdateByMobile(data, mobile); err != nil {
 			global.SLogger.Error("add user err:%s", err)
@@ -82,7 +85,20 @@ func (u *Users) LoginByMobile(mobile, code string) (*response.Login, error) {
 }
 
 func (u *Users) generateToken() string {
-	return uuid.New().String()
+	canonicID, err := nanoid.Standard(24)
+	if err != nil {
+		panic(err)
+	}
+	return canonicID()
+}
+
+func (u *Users) generateUserId() string {
+	decenaryID, err := nanoid.CustomASCII("0123456789", 3)
+	if err != nil {
+		panic(err)
+	}
+	id := fmt.Sprintf("%s%s", time.Now().Format("060102150405"), decenaryID())
+	return id
 }
 
 // Auth 实名认证
@@ -113,7 +129,7 @@ func (u *Users) Auth(userId, realName, card string) error {
 	data := model.NftUsers{
 		RealName: realName,
 		CardNo:   card,
-		Birthday: birthday,
+		Birthday: birthday.Format(time.DateOnly),
 	}
 
 	if err = usersModel.UpdateByMobile(data, userId); err != nil {

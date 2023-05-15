@@ -7,12 +7,14 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111" // 引入sms
 	"nft_platform/global"
+	"strings"
 )
 
 type Sms struct {
 }
 
 func (s *Sms) send(mobile []string, tempId string, tempVal []string) error {
+	return nil
 	/* 必要步骤：
 	 * 实例化一个认证对象，入参需要传入腾讯云账户密钥对secretId，secretKey。
 	 * 这里采用的是从环境变量读取的方式，需要在环境变量中先设置这两个值。
@@ -102,7 +104,7 @@ func (s *Sms) send(mobile []string, tempId string, tempVal []string) error {
 	}
 	results := response.Response.SendStatusSet
 	for _, result := range results {
-		if *result.Code != "OK" {
+		if strings.ToLower(*result.Code) != "ok" {
 			global.SLogger.Errorf("send %s sms err coe:%s,err msg: %s", *result.PhoneNumber, *result.Code, *result.Message)
 			return fmt.Errorf("send sms err:%s", *result.Code)
 		}
